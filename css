@@ -1,0 +1,265 @@
+/* =====================================================================
+   BIRTHDAY SITE — shared styles (every page uses this one file)
+   ---------------------------------------------------------------------
+   FONTS
+   Three free Google Fonts are loaded in each page's <head>:
+     Pacifico (script headings), Poppins (body text), Caveat (the letter).
+   They need internet. Without internet everything still works, it just
+   uses fallback fonts.
+
+   TO USE THE FONTS OFFLINE (optional):
+     1. Download each font from https://fonts.google.com
+        (search the name, click "Get font" / "Download all").
+     2. Make a folder called  fonts  next to the  css  folder and copy the
+        .ttf files into it.
+     3. Delete the Google Fonts <link> lines from the HTML pages, then
+        uncomment the @font-face block at the very bottom of this file and
+        make sure the file names match the ones you downloaded.
+   ===================================================================== */
+
+:root {
+  --ink: #ffffff;
+  --pink: #ff5c93;
+  --gold: #ffd166;
+  --script: 'Pacifico', 'Brush Script MT', cursive;
+  --body: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --hand: 'Caveat', 'Comic Sans MS', cursive;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: linear-gradient(160deg, var(--bg1), var(--bg2)) fixed;
+}
+
+/* ---- The sky "warms up" page by page: night -> sunrise -> party ---- */
+body[data-stage="1"]  { --bg1: #05041a; --bg2: #1b1a4a; }
+body[data-stage="2"]  { --bg1: #140f3a; --bg2: #3b2a85; }
+body[data-stage="3"]  { --bg1: #2d1670; --bg2: #8a3ba8; }
+body[data-stage="4"]  { --bg1: #5b2290; --bg2: #d9498a; }
+body[data-stage="5"]  { --bg1: #ff5f9e; --bg2: #ffa86b; }
+body[data-stage="6"]  { --bg1: #c2417a; --bg2: #f2915f; }
+body[data-stage="7"]  { --bg1: #7a4a2e; --bg2: #d49a68; }
+body[data-stage="8"]  { --bg1: #6a2bd9; --bg2: #e0409f; }
+body[data-stage="9"]  { --bg1: #b3125a; --bg2: #ff7a5c; }
+body[data-stage="10"] { --bg1: #1d1148; --bg2: #5d6fc7; }
+
+/* ---- Page layout + the soft fade-in / fade-out ---- */
+.page {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 70px 20px 80px;
+  animation: pageIn .7s ease both;
+}
+body.leaving .page { animation: pageOut .42s ease forwards; }
+
+@keyframes pageIn  { from { opacity: 0; transform: translateY(18px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes pageOut { to   { opacity: 0; transform: translateY(-14px) scale(.98); } }
+@keyframes rise    { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+/* Anything with class "rise" fades up. Set the delay inline:  style="--d:.6s" */
+.rise { animation: rise .8s ease backwards; animation-delay: var(--d, 0s); }
+
+/* ---- Text ---- */
+h1, h2 { font-weight: 400; }
+.script { font-family: var(--script); font-size: clamp(2rem, 7vw, 3.6rem); line-height: 1.25; text-shadow: 0 4px 24px rgba(0,0,0,.25); }
+.eyebrow { letter-spacing: .25em; text-transform: lowercase; opacity: .85; margin-bottom: 14px; font-size: 1rem; }
+.lead { font-size: clamp(1rem, 3.4vw, 1.3rem); margin-top: 18px; max-width: 520px; line-height: 1.6; opacity: .95; }
+.small { font-size: .9rem; opacity: .8; margin-top: 10px; }
+
+/* ---- Buttons ---- */
+.btn {
+  display: inline-block;
+  margin-top: 28px;
+  padding: 14px 34px;
+  border-radius: 999px;
+  border: 0;
+  background: #fff;
+  color: #c2307a;
+  font: 700 1rem var(--body);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  transition: transform .25s ease, box-shadow .25s ease, opacity .5s ease;
+}
+.btn:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 14px 30px rgba(0,0,0,.3); }
+.btn.ghost { background: rgba(255,255,255,.15); color: #fff; box-shadow: none; border: 1px solid rgba(255,255,255,.55); }
+.btn-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* ---- Fixed little helpers: back link + progress dots ---- */
+.back { position: fixed; top: 16px; left: 18px; z-index: 5; color: #fff; opacity: .75; text-decoration: none; font-size: .9rem; transition: opacity .2s; }
+.back:hover { opacity: 1; }
+.dots { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
+.dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.3); transition: all .4s; }
+.dots i.done { background: rgba(255,255,255,.75); }
+.dots i.on { background: #fff; transform: scale(1.5); box-shadow: 0 0 10px #fff; }
+
+/* ---- Floating background emoji ---- */
+.particle { position: fixed; bottom: -50px; opacity: 0; pointer-events: none; z-index: 0; font-size: var(--s); animation: floatUp var(--t) linear infinite; animation-delay: var(--dl); }
+@keyframes floatUp {
+  0%   { transform: translateY(0) rotate(0); opacity: 0; }
+  10%  { opacity: .85; }
+  90%  { opacity: .85; }
+  100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
+}
+
+/* ---- Photo frames ---- */
+.polaroid {
+  position: relative;
+  background: #fff;
+  padding: 12px 12px 42px;
+  border-radius: 6px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.35);
+  width: min(80vw, 320px);
+  margin-top: 26px;
+  transform: rotate(-3deg);
+  transition: transform .4s ease;
+}
+.polaroid.alt { transform: rotate(3deg); }
+.polaroid:hover { transform: rotate(0) scale(1.03); }
+.polaroid img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block; border-radius: 3px; background: #eee; }
+.polaroid figcaption { position: absolute; bottom: 10px; left: 0; right: 0; color: #6b4a5c; font-family: var(--script); font-size: 1rem; }
+.placeholder {
+  width: 100%; aspect-ratio: 4 / 5;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  border: 2px dashed #e2a0bd; border-radius: 3px; background: #fff5f9;
+  color: #b0507a; font-size: .8rem; line-height: 1.5; padding: 10px; text-align: center;
+}
+.placeholder b { word-break: break-all; }
+
+/* ---- Page 4: 3-2-1 countdown ---- */
+.countdown { position: relative; width: 100px; height: 90px; margin: 22px auto 0; }
+.countdown span { position: absolute; inset: 0; font-size: 4.6rem; font-weight: 800; line-height: 90px; opacity: 0; animation: count 1s ease both; animation-delay: var(--d); text-shadow: 0 0 24px rgba(255,255,255,.7); }
+@keyframes count {
+  0%   { opacity: 0; transform: scale(.3); }
+  30%  { opacity: 1; transform: scale(1.15); }
+  70%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.8); }
+}
+
+/* ---- Page 5: "Happy Birthday" letter-by-letter ---- */
+.hb { font-family: var(--script); font-size: clamp(2.6rem, 11vw, 5.4rem); line-height: 1.15; text-shadow: 0 6px 30px rgba(120,20,70,.45); }
+.hb .word { display: inline-block; white-space: nowrap; }
+.hb .ltr { display: inline-block; animation: bounceIn .9s cubic-bezier(.2, 1.6, .4, 1) backwards var(--d), bob 2.6s ease-in-out calc(var(--d) + 1s) infinite; }
+.hb-name { font-family: var(--script); font-size: clamp(1.6rem, 6vw, 2.8rem); margin-top: 6px; color: #fff6d6; }
+@keyframes bounceIn { from { opacity: 0; transform: translateY(-60px) scale(.3); } to { opacity: 1; transform: none; } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+/* ---- Modals (gift / heart / letter popups) ---- */
+.modal {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: rgba(10, 5, 30, .6); backdrop-filter: blur(4px);
+  opacity: 0; pointer-events: none; transition: opacity .4s ease;
+}
+.modal.show { opacity: 1; pointer-events: auto; }
+.modal .card {
+  background: #fff; color: #4a2340; border-radius: 22px; padding: 26px 22px;
+  width: 100%; max-width: 420px; max-height: 92vh; overflow: auto; text-align: center;
+  box-shadow: 0 30px 80px rgba(0,0,0,.45);
+  transform: scale(.6) translateY(30px); transition: transform .55s cubic-bezier(.2, 1.4, .4, 1);
+}
+.modal.show .card { transform: none; }
+.modal h2 { font-family: var(--script); font-size: 1.7rem; color: #d1306f; margin-bottom: 8px; }
+.modal p { line-height: 1.6; }
+.modal .btn { margin-top: 18px; }
+.modal .polaroid { margin: 10px auto 18px; box-shadow: 0 10px 26px rgba(0,0,0,.25); }
+
+/* ---- Confetti + floating hearts ---- */
+.confetti { position: fixed; z-index: 70; pointer-events: none; border-radius: 2px; }
+.fheart { position: fixed; z-index: 60; pointer-events: none; }
+
+/* ---- Page 6: memories ---- */
+.mem-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 26px; width: min(1000px, 100%); margin-top: 28px; }
+.mem { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); border-radius: 20px; padding: 14px; backdrop-filter: blur(6px); text-align: left; animation: rise .8s ease backwards; animation-delay: var(--d); }
+.mem img, .mem .placeholder { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; display: block; }
+.mem .date { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; opacity: .8; margin-top: 12px; }
+.mem h3 { font-family: var(--script); font-weight: 400; font-size: 1.15rem; margin: 4px 0 6px; }
+.mem p { font-size: .92rem; line-height: 1.55; opacity: .95; }
+
+/* ---- Page 7: the bear ---- */
+.bear-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
+.bubble { position: relative; background: #fff; color: #5a3320; padding: 14px 20px; border-radius: 20px; max-width: min(88vw, 320px); font-weight: 600; line-height: 1.5; margin-bottom: 20px; box-shadow: 0 10px 24px rgba(0,0,0,.2); min-height: 52px; }
+.bubble::after { content: ''; position: absolute; left: 50%; bottom: -12px; margin-left: -12px; border: 12px solid transparent; border-top-color: #fff; border-bottom: 0; }
+.bear { width: min(70vw, 270px); height: auto; cursor: pointer; overflow: visible; filter: drop-shadow(0 14px 18px rgba(0,0,0,.3)); animation: bob 3s ease-in-out infinite; -webkit-tap-highlight-color: transparent; }
+.bear .arm-r { transform-origin: 150px 135px; animation: wave 1.8s ease-in-out infinite; }
+.bear.squish { animation: squish .55s ease; }
+@keyframes wave   { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-20deg); } }
+@keyframes squish { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.12, .88); } 60% { transform: scale(.94, 1.07); } }
+
+/* ---- Page 8: gift box ---- */
+.gift { position: relative; width: 200px; height: 210px; margin-top: 40px; cursor: pointer; animation: wiggle 2.4s ease-in-out infinite; outline: none; -webkit-tap-highlight-color: transparent; }
+.gift.open { animation: none; cursor: default; }
+.gift-box { position: absolute; bottom: 0; left: 10px; width: 180px; height: 130px; background: linear-gradient(#ff5c8a, #e63a73); border-radius: 0 0 10px 10px; box-shadow: 0 18px 30px rgba(0,0,0,.3); }
+.gift-box::after, .gift-lid::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 30px; margin-left: -15px; background: linear-gradient(90deg, #ffd166, #ffe599, #ffd166); }
+.gift-lid { position: absolute; bottom: 124px; left: 0; width: 200px; height: 46px; background: linear-gradient(#ff7aa2, #ff5c8a); border-radius: 10px; transition: transform .9s cubic-bezier(.3, 1.4, .5, 1), opacity .9s; box-shadow: 0 6px 14px rgba(0,0,0,.2); z-index: 2; }
+.gift-bow { position: absolute; left: 50%; top: -44px; margin-left: -34px; font-size: 68px; line-height: 1; z-index: 3; }
+.gift.open .gift-lid { transform: translateY(-150px) rotate(-22deg); opacity: .0; }
+.gift-glow { position: absolute; left: 50%; top: 40px; width: 160px; height: 160px; margin-left: -80px; border-radius: 50%; background: radial-gradient(circle, rgba(255,240,170,.95), rgba(255,240,170,0) 70%); opacity: 0; transition: opacity .8s; }
+.gift.open .gift-glow { opacity: 1; }
+@keyframes wiggle { 0%, 80%, 100% { transform: rotate(0); } 84% { transform: rotate(-4deg); } 88% { transform: rotate(4deg); } 92% { transform: rotate(-3deg); } 96% { transform: rotate(3deg); } }
+
+/* ---- Page 9: bow, arrow and heart ---- */
+.archery { position: relative; width: min(92vw, 620px); height: 220px; margin: 30px auto 0; }
+.bow { position: absolute; left: 6px; top: 40px; width: 50px; height: 140px; overflow: visible; }
+.arrow { position: absolute; left: 22px; top: 98px; width: 160px; height: 24px; z-index: 3; overflow: visible; }
+.heart-target { position: absolute; right: 8px; top: 40px; width: 140px; height: 140px; overflow: visible; filter: drop-shadow(0 10px 18px rgba(0,0,0,.3)); animation: beat 1.5s ease-in-out infinite; }
+.heart-target.hit { animation: hit .8s ease; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+@keyframes hit  { 0%, 100% { transform: scale(1); } 20% { transform: scale(1.25) rotate(-6deg); } 40% { transform: scale(.92) rotate(5deg); } 60% { transform: scale(1.15) rotate(-3deg); } }
+.cheesy { font-size: 1.05rem; font-weight: 600; color: #6b2349; }
+
+/* ---- Page 10: envelope + letter ---- */
+.envelope { position: relative; width: 280px; height: 190px; margin-top: 40px; background: #e9bd84; border-radius: 8px; cursor: pointer; perspective: 900px; box-shadow: 0 22px 40px rgba(0,0,0,.35); animation: wiggle 2.6s ease-in-out infinite; outline: none; -webkit-tap-highlight-color: transparent; }
+.envelope.open { animation: none; }
+.env-flap { position: absolute; top: 0; left: 0; width: 100%; height: 110px; background: #d9a468; clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform .6s ease, z-index 0s .3s; z-index: 4; }
+.env-paper { position: absolute; left: 14px; right: 14px; top: 10px; bottom: 10px; background: #fffdf6; border-radius: 6px; z-index: 2; transition: transform .7s ease .3s; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; }
+.env-front { position: absolute; inset: 0; background: #f2cc98; clip-path: polygon(0 100%, 0 38%, 50% 66%, 100% 38%, 100% 100%); z-index: 3; border-radius: 8px; }
+.env-seal { position: absolute; left: 50%; top: 86px; margin-left: -20px; width: 40px; height: 40px; line-height: 40px; text-align: center; font-size: 1.7rem; z-index: 5; transition: opacity .3s; }
+.envelope.open .env-flap { transform: rotateX(180deg); z-index: 1; }
+.envelope.open .env-paper { transform: translateY(-70px); }
+.envelope.open .env-seal { opacity: 0; }
+.paper-card {
+  background-color: #fffaf0;
+  background-image: repeating-linear-gradient(transparent, transparent 31px, #e8dcc4 31px, #e8dcc4 32px);
+  background-position: 0 14px;
+  color: #4a3326; text-align: left; border-radius: 6px; padding: 34px 26px 28px;
+  width: 100%; max-width: 480px; max-height: 90vh; overflow: auto;
+  font-family: var(--hand); font-size: 1.35rem; line-height: 32px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5);
+  transform: translateY(80px) scale(.85) rotate(-2deg); transition: transform .7s cubic-bezier(.2, 1.2, .4, 1);
+}
+.modal.show .paper-card { transform: none; }
+.paper-card p { margin-bottom: 32px; line-height: 32px; }
+.paper-card .sign { text-align: right; font-size: 1.6rem; margin-bottom: 0; }
+.paper-card .x { display: block; margin: 20px auto 0; }
+
+/* ---- Be kind to people who prefer less motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .particle { display: none; }
+}
+
+/* =====================================================================
+   OPTIONAL — OFFLINE FONTS (see the instructions at the top of this file)
+   Uncomment this block once your font files are inside the  fonts  folder.
+
+@font-face { font-family: 'Pacifico'; src: url('../fonts/Pacifico-Regular.ttf'); font-display: swap; }
+@font-face { font-family: 'Poppins'; font-weight: 400; src: url('../fonts/Poppins-Regular.ttf'); font-display: swap; }
+@font-face { font-family: 'Poppins'; font-weight: 600; src: url('../fonts/Poppins-SemiBold.ttf'); font-display: swap; }
+@font-face { font-family: 'Poppins'; font-weight: 800; src: url('../fonts/Poppins-ExtraBold.ttf'); font-display: swap; }
+@font-face { font-family: 'Caveat'; src: url('../fonts/Caveat-Regular.ttf'); font-display: swap; }
+   ===================================================================== */
