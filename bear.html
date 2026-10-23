@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A bear wants to say hi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pacifico&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="7">
+
+  <!-- PAGE 7 of 10 — THE MOCHA BEAR
+       The bear is drawn right here in code (SVG), so there is nothing to download.
+       What it says is edited in js/config.js  ->  bearMessages -->
+  <div class="page">
+    <h1 class="script rise" style="--d:.2s">Someone wants<br>to say hi!</h1>
+
+    <div class="bear-wrap rise" style="--d:.8s">
+      <div class="bubble" id="bubble">Tap me! 🧸</div>
+
+      <svg class="bear" id="bear" viewBox="0 0 200 230" role="img" aria-label="A cute mocha-coloured teddy bear in a party hat">
+        <!-- ears -->
+        <circle cx="48" cy="48" r="24" fill="#8a5a3c"/><circle cx="48" cy="48" r="12" fill="#e9c4a0"/>
+        <circle cx="152" cy="48" r="24" fill="#8a5a3c"/><circle cx="152" cy="48" r="12" fill="#e9c4a0"/>
+        <!-- legs -->
+        <ellipse cx="68" cy="212" rx="27" ry="17" fill="#8a5a3c"/><ellipse cx="68" cy="214" rx="14" ry="8" fill="#e9c4a0"/>
+        <ellipse cx="132" cy="212" rx="27" ry="17" fill="#8a5a3c"/><ellipse cx="132" cy="214" rx="14" ry="8" fill="#e9c4a0"/>
+        <!-- body + tummy -->
+        <ellipse cx="100" cy="168" rx="56" ry="52" fill="#a1704b"/>
+        <ellipse cx="100" cy="176" rx="34" ry="34" fill="#ecd0b0"/>
+        <!-- arms (the right one waves) -->
+        <ellipse cx="46" cy="160" rx="16" ry="30" fill="#8a5a3c" transform="rotate(25 46 160)"/>
+        <g class="arm-r"><ellipse cx="154" cy="160" rx="16" ry="30" fill="#8a5a3c" transform="rotate(-25 154 160)"/></g>
+        <!-- head -->
+        <ellipse cx="100" cy="92" rx="64" ry="56" fill="#a1704b"/>
+        <ellipse cx="100" cy="108" rx="28" ry="21" fill="#ecd0b0"/>
+        <ellipse cx="100" cy="100" rx="9" ry="6.5" fill="#3a2314"/>
+        <path d="M100 106 V112 M100 112 Q92 120 84 113 M100 112 Q108 120 116 113" stroke="#3a2314" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <!-- eyes + cheeks -->
+        <circle cx="76" cy="84" r="7" fill="#2b190d"/><circle cx="124" cy="84" r="7" fill="#2b190d"/>
+        <circle cx="78" cy="81.5" r="2.4" fill="#fff"/><circle cx="126" cy="81.5" r="2.4" fill="#fff"/>
+        <ellipse cx="60" cy="102" rx="9" ry="6" fill="#ff8fa8" opacity=".55"/>
+        <ellipse cx="140" cy="102" rx="9" ry="6" fill="#ff8fa8" opacity=".55"/>
+        <!-- party hat -->
+        <polygon points="100,2 76,44 124,44" fill="#ff5c93"/>
+        <path d="M89 22 L111 22 M82 34 L118 34" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+        <circle cx="100" cy="4" r="7" fill="#ffd166"/>
+      </svg>
+    </div>
+
+    <div class="btn-row rise" style="--d:1.2s">
+      <button class="btn ghost" id="hug" type="button">Give a hug 🤗</button>
+      <a class="btn" data-go href="gift.html">Open your gift →</a>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var bear = document.getElementById('bear');
+      var bubble = document.getElementById('bubble');
+      var msgs = (window.SITE && SITE.bearMessages) || ['Happy Birthday! 🧸'];
+      var i = 0;
+
+      function squish() {
+        bear.classList.remove('squish');
+        void bear.getBoundingClientRect();           // restart the animation
+        bear.classList.add('squish');
+        setTimeout(function () { bear.classList.remove('squish'); }, 600);
+      }
+      function talk(e) {
+        bubble.textContent = msgs[i % msgs.length];
+        i++;
+        squish();
+        var r = bear.getBoundingClientRect();
+        var x = e && e.clientX ? e.clientX : r.left + r.width / 2;
+        var y = e && e.clientY ? e.clientY : r.top + r.height / 3;
+        floatHearts(x, y, 6);
+      }
+      bear.addEventListener('click', talk);
+      document.getElementById('hug').addEventListener('click', function () {
+        bubble.textContent = 'Aww… a big warm hug for you too! 💖';
+        squish();
+        var r = bear.getBoundingClientRect();
+        floatHearts(r.left + r.width / 2, r.top + r.height / 2, 14);
+      });
+    })();
+  </script>
+</body>
+</html>

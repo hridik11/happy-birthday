@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Right in the heart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pacifico&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="9">
+
+  <!-- PAGE 9 of 10 — SHOOT THE ARROW AT THE HEART
+       Bow, arrow and heart are drawn in code, nothing to download.
+       The cheesy lines are edited in js/config.js  ->  cheesyLines -->
+  <div class="page">
+    <h1 class="script rise" style="--d:.2s">One more thing…</h1>
+    <p class="lead rise" style="--d:.7s">Take your best shot 🏹</p>
+
+    <div class="archery rise" style="--d:1.1s" id="stage">
+      <!-- the bow -->
+      <svg class="bow" viewBox="0 0 50 140" aria-hidden="true">
+        <path d="M30 4 Q-18 70 30 136" stroke="#f1c48f" stroke-width="7" fill="none" stroke-linecap="round"/>
+        <line x1="30" y1="4" x2="30" y2="136" stroke="#fff" stroke-width="1.5"/>
+      </svg>
+      <!-- the arrow -->
+      <svg class="arrow" id="arrow" viewBox="0 0 160 24" aria-hidden="true">
+        <line x1="8" y1="12" x2="140" y2="12" stroke="#fff3c4" stroke-width="4" stroke-linecap="round"/>
+        <polygon points="136,3 160,12 136,21" fill="#ffd166"/>
+        <path d="M8 12 L0 3 M8 12 L0 21 M22 12 L14 3 M22 12 L14 21" stroke="#ff6b9a" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+      <!-- the heart -->
+      <svg class="heart-target" id="heart" viewBox="0 0 100 100" aria-hidden="true">
+        <defs><radialGradient id="hg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#ff8fb0"/><stop offset="1" stop-color="#e01e5a"/></radialGradient></defs>
+        <path d="M50 90 C15 62 5 40 15 22 C25 6 45 8 50 24 C55 8 75 6 85 22 C95 40 85 62 50 90 Z" fill="url(#hg)"/>
+      </svg>
+    </div>
+
+    <button class="btn rise" style="--d:1.5s" id="shoot" type="button">Shoot the arrow 🏹</button>
+  </div>
+
+  <!-- The popup after a direct hit -->
+  <div class="modal" id="hitModal">
+    <div class="card">
+      <h2>Direct hit! 💘</h2>
+
+      <!-- 📸 HEART PHOTO
+           Put your picture in the folder called  images  and name it:  heart.jpg
+           (heart.png / heart.jpeg / heart.webp also work). Best shape: portrait or square. -->
+      <figure class="polaroid">
+        <img data-photo="images/heart" alt="Heart photo">
+        <figcaption>you, always 💕</figcaption>
+      </figure>
+
+      <p class="cheesy" id="cheesy"></p>
+      <div class="btn-row">
+        <button class="btn ghost" id="again" type="button" style="color:#c2307a;border-color:#e6a1c0">Shoot again</button>
+        <a class="btn" data-go href="letter.html">Last stop →</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var arrow = document.getElementById('arrow');
+      var heart = document.getElementById('heart');
+      var modal = document.getElementById('hitModal');
+      var btn = document.getElementById('shoot');
+      var lines = (window.SITE && SITE.cheesyLines) || ['You nailed my heart! 💘'];
+      var flying = false, anim = null;
+
+      function shoot() {
+        if (flying) return;
+        flying = true;
+        btn.classList.add('hidden');
+        if (anim) anim.cancel();
+        heart.classList.remove('hit');
+
+        // distance from the arrow tip to the middle of the heart
+        var a = arrow.getBoundingClientRect(), h = heart.getBoundingClientRect();
+        var dx = (h.left + h.width * 0.5) - a.right;
+
+        anim = arrow.animate(
+          [{ transform: 'translateX(-14px)' }, { transform: 'translateX(' + dx + 'px)' }],
+          { duration: 750, easing: 'cubic-bezier(.35,0,.9,.55)', fill: 'forwards' }
+        );
+        anim.onfinish = function () {
+          heart.classList.add('hit');
+          var r = heart.getBoundingClientRect();
+          floatHearts(r.left + r.width / 2, r.top + r.height / 2, 14);
+          burst(r.left + r.width / 2, r.top + r.height / 2, 60);
+          document.getElementById('cheesy').textContent = lines[Math.floor(Math.random() * lines.length)];
+          setTimeout(function () { modal.classList.add('show'); flying = false; btn.textContent = 'Shoot again 🏹'; btn.classList.remove('hidden'); }, 900);
+        };
+      }
+      btn.addEventListener('click', shoot);
+      document.getElementById('again').addEventListener('click', function () {
+        modal.classList.remove('show');
+        if (anim) anim.cancel();
+        heart.classList.remove('hit');
+      });
+    })();
+  </script>
+</body>
+</html>

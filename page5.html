@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Happy Birthday!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pacifico&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="5">
+
+  <!-- PAGE 5 of 10 — THE BIG "HAPPY BIRTHDAY" + THIRD PHOTO -->
+  <div class="page">
+    <h1 class="hb" data-wave>Happy Birthday!</h1>
+    <!-- The name below comes from js/config.js  ->  name: "..." -->
+    <p class="hb-name rise" style="--d:1.6s" data-site="name">Birthday Star</p>
+
+    <!-- 📸 PHOTO 3
+         Put your picture in the folder called  images  and name it:  photo3.jpg
+         (photo3.png / photo3.jpeg / photo3.webp also work).
+         Best shape: portrait or square. Tip: click the photo on the page for extra confetti! -->
+    <figure class="polaroid rise" style="--d:2s" id="pic">
+      <img data-photo="images/photo3" alt="Photo 3">
+      <figcaption>the star of the day ⭐</figcaption>
+    </figure>
+
+    <p class="lead rise" style="--d:2.4s">Wishing you a day as wonderful as you are.</p>
+    <a class="btn rise" style="--d:2.8s" data-go href="memories.html">But wait, there's more →</a>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Confetti when the page opens, and again whenever the photo is clicked.
+    setTimeout(function () { burst(window.innerWidth / 2, window.innerHeight * 0.3, 140); }, 900);
+    document.getElementById('pic').addEventListener('click', function (e) { burst(e.clientX, e.clientY, 80); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A little gift for you</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pacifico&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="8">
+
+  <!-- PAGE 8 of 10 — THE GIFT BOX (tap it to open)
+       The box is drawn in CSS, nothing to download.
+       The surprise text is edited in js/config.js  ->  giftTitle / giftMessage -->
+  <div class="page">
+    <h1 class="script rise" style="--d:.2s">A little gift<br>for you</h1>
+    <p class="lead rise" id="hint" style="--d:.8s; transition:opacity .4s">Tap the box 👇</p>
+
+    <div class="gift rise" style="--d:1.2s" id="gift" role="button" tabindex="0" aria-label="Open the gift box">
+      <div class="gift-glow"></div>
+      <div class="gift-box"></div>
+      <div class="gift-lid"><span class="gift-bow">🎀</span></div>
+    </div>
+
+    <!-- This button appears once the gift is opened. -->
+    <a class="btn hidden" id="nextBtn" data-go href="heart.html">One more thing →</a>
+  </div>
+
+  <!-- The popup that appears when the gift opens -->
+  <div class="modal" id="giftModal">
+    <div class="card">
+      <h2 data-site="giftTitle">Your Surprise! 🎁</h2>
+
+      <!-- 📸 OPTIONAL GIFT PHOTO
+           Want a picture inside the gift? Save it in  images  as  gift.jpg
+           (gift.png / gift.jpeg / gift.webp also work).
+           No file there = this photo simply doesn't show. -->
+      <figure class="polaroid alt">
+        <img data-photo="images/gift" data-optional alt="Gift photo">
+      </figure>
+
+      <p id="giftText"></p>
+      <button class="btn" type="button" id="giftClose">Thank you! 💖</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var gift = document.getElementById('gift');
+      var modal = document.getElementById('giftModal');
+      var next = document.getElementById('nextBtn');
+      var hint = document.getElementById('hint');
+      var opened = false;
+
+      document.getElementById('giftText').textContent = (window.SITE && SITE.giftMessage) || 'Happy Birthday!';
+
+      function openGift() {
+        if (opened) { modal.classList.add('show'); return; }   // tap again = see the message again
+        opened = true;
+        gift.classList.add('open');
+        hint.style.opacity = 0;
+        var r = gift.getBoundingClientRect();
+        burst(r.left + r.width / 2, r.top + 20, 110);
+        setTimeout(function () { modal.classList.add('show'); }, 1000);
+        next.classList.remove('hidden');
+      }
+      gift.addEventListener('click', openGift);
+      gift.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openGift(); } });
+      document.getElementById('giftClose').addEventListener('click', function () { modal.classList.remove('show'); });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A letter for you</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pacifico&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="10">
+
+  <!-- PAGE 10 of 10 — THE LETTER (tap the envelope)
+       The envelope is drawn in CSS, nothing to download.
+       Write the letter in js/config.js  ->  letter  (one paragraph per line) -->
+  <div class="page">
+    <h1 class="script rise" style="--d:.2s">A letter,<br>just for you</h1>
+    <p class="lead rise" id="hint" style="--d:.8s; transition:opacity .4s">Tap the envelope 💌</p>
+
+    <div class="envelope rise" style="--d:1.2s" id="env" role="button" tabindex="0" aria-label="Open the letter">
+      <div class="env-flap"></div>
+      <div class="env-paper">💌</div>
+      <div class="env-front"></div>
+      <div class="env-seal">❤️</div>
+    </div>
+
+    <!-- Shown after the letter has been opened -->
+    <div class="hidden" id="endBlock" style="margin-top:34px;transition:opacity .8s">
+      <p class="script" style="font-size:2rem">The End 💖</p>
+      <p class="small">…or maybe just the beginning.</p>
+      <div class="btn-row">
+        <button class="btn ghost" id="reread" type="button">Read it again</button>
+        <a class="btn" data-go href="index.html">↺ Start over</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- The letter itself -->
+  <div class="modal" id="letterModal">
+    <div class="paper-card" id="paper">
+      <button class="btn x" id="letterClose" type="button" style="font-family:var(--body);line-height:1.2">Close ✕</button>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    (function () {
+      var S = window.SITE || {};
+      var env = document.getElementById('env');
+      var modal = document.getElementById('letterModal');
+      var paper = document.getElementById('paper');
+      var closeBtn = document.getElementById('letterClose');
+      var opened = false;
+
+      // Build the letter from js/config.js
+      function add(text, cls, before) {
+        var p = document.createElement('p');
+        if (cls) p.className = cls;
+        p.textContent = text;
+        paper.insertBefore(p, before);
+      }
+      add('Dear ' + (S.name || 'you') + ',', '', closeBtn);
+      (S.letter || []).forEach(function (t) { add(t, '', closeBtn); });
+      add(S.letterClosing || 'With all my love,', '', closeBtn);
+      add(S.from || '', 'sign', closeBtn);
+      // Move the Close button to the very end
+      paper.appendChild(closeBtn);
+
+      function openLetter() {
+        if (!opened) {
+          opened = true;
+          env.classList.add('open');
+          document.getElementById('hint').style.opacity = 0;
+          var r = env.getBoundingClientRect();
+          floatHearts(r.left + r.width / 2, r.top, 10);
+          setTimeout(function () { modal.classList.add('show'); }, 1100);
+        } else {
+          modal.classList.add('show');
+        }
+      }
+      function afterClose() {
+        modal.classList.remove('show');
+        document.getElementById('endBlock').classList.remove('hidden');
+        burst(window.innerWidth / 2, window.innerHeight / 2, 90);
+      }
+      env.addEventListener('click', openLetter);
+      env.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLetter(); } });
+      closeBtn.addEventListener('click', afterClose);
+      modal.addEventListener('click', function (e) { if (e.target === modal) document.getElementById('endBlock').classList.remove('hidden'); });
+      document.getElementById('reread').addEventListener('click', function () { modal.classList.add('show'); });
+    })();
+  </script>
+</body>
+</html>

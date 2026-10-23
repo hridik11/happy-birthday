@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Almost there…</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pacifico&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-stage="4">
+
+  <!-- PAGE 4 of 10 — SECOND PHOTO PAGE (with a 3-2-1 countdown) -->
+  <div class="page">
+    <h1 class="script rise" style="--d:.2s">Every year gets<br>better than the last</h1>
+
+    <!-- 📸 PHOTO 2
+         Put your picture in the folder called  images  and name it:  photo2.jpg
+         (photo2.png / photo2.jpeg / photo2.webp also work).
+         Best shape: portrait or square. -->
+    <figure class="polaroid alt rise" style="--d:.8s">
+      <img data-photo="images/photo2" alt="Photo 2">
+      <figcaption>almost there… 🎈</figcaption>
+    </figure>
+
+    <!-- The countdown: each number appears one second after the other. -->
+    <div class="countdown" aria-hidden="true">
+      <span style="--d:1.6s">3</span>
+      <span style="--d:2.6s">2</span>
+      <span style="--d:3.6s">1</span>
+    </div>
+
+    <!-- This button fades in after the countdown finishes (delay 4.8s). -->
+    <a class="btn rise" style="--d:4.8s" data-go href="page5.html">Now… 🎉</a>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
